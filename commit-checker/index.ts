@@ -51,7 +51,7 @@ const result = members.map((member) => {
 
 // Exception
 const resultWithException = result.map((iter) => {
-  // 커밋이 정상적으로 되지 않았던 이슈 때문에 -1 추가
+  // 커밋이 정상적으로 되지 않았던 이슈 + 월요일 공휴일 때문에 -2 추가
   if (iter.name === '정민경') {
     return {
       name: iter.name,
