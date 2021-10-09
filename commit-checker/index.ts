@@ -6,41 +6,51 @@ import gitlog, {
 
 import { members } from './constant';
 
+interface CommitObject {
+  date: string
+  [index: number]: boolean
+}
+
 const currentMoment = moment().utcOffset(540);
-const fileRegex = /.java|.py/;
+// To filter only java & python files.
+const fileRegex = /.java|.py|.c/;
 const options: GitlogOptions<CommitField> = {
   repo: __dirname,
   number: 1000,
   fields: ['authorEmail', 'authorDate'],
-  since: currentMoment.startOf('week').format('YYYY-MM-DD'),
+  since: currentMoment.clone().startOf('week').add(1, 'day').format('YYYY-MM-DD'),
 };
-const commitObject: any[] = [];
+const commitLogs = gitlog(options);
 
+// Create commitArray
+const commitArray: CommitObject[] = [];
 for (let weekday = 1; weekday <= 5; weekday += 1) {
-  commitObject.push({
-    date: currentMoment.clone().add(weekday, 'day').format('YYYY-MM-DD'),
+  commitArray.push({
+    date: currentMoment.clone().startOf('week').add(weekday, 'day').format('YYYY-MM-DD'),
   });
 }
 
-const commitLogs = gitlog(options);
+// Fill commitArray
 commitLogs.forEach((commitLog) => {
   if (commitLog.files.find((file) => file.match(fileRegex)) != null) {
-    // eslint-disable-next-line max-len
-    const matchedMember = members.find((member) => member.authorEmail.includes(commitLog.authorEmail));
-    const commitDate = moment(new Date(commitLog.authorDate)).format('YYYY-MM-DD');
-    const dateIndex = commitObject.findIndex((object) => object.date === commitDate);
-    if (matchedMember != null) {
-      commitObject[dateIndex][matchedMember.id] = 1;
+    const { authorEmail, authorDate } = commitLog;
+    const commitDate = moment(new Date(authorDate)).format('YYYY-MM-DD');
+    const dateIndex = commitArray.findIndex((object) => object.date === commitDate);
+    const matchedMember = members.find((member) => member.authorEmail.includes(authorEmail));
+
+    if (matchedMember != null && dateIndex !== -1) {
+      commitArray[dateIndex][matchedMember.id] = true;
     }
   }
 });
 
+// Get result
 const result = members.map((member) => {
   const { id, name } = member;
   let count = 0;
-  commitObject.forEach((object) => {
-    if (object[id] != null) {
-      count += object[id];
+  commitArray.forEach((object) => {
+    if (object[id] === true) {
+      count += 1;
     }
   });
   return {
@@ -49,9 +59,9 @@ const result = members.map((member) => {
   };
 });
 
-// Exception
+// Apply Exception
 const resultWithException = result.map((iter) => {
-  // 커밋이 정상적으로 되지 않았던 이슈 + 월요일 공휴일 때문에 -2 추가
+  // 커밋이 정상적으로 되지 않았던 이슈 (죽고리즘 첫째 주) + 월요일 공휴일 때문에 -2 추가
   if (iter.name === '정민경') {
     return {
       name: iter.name,
@@ -65,5 +75,7 @@ const resultWithException = result.map((iter) => {
   };
 });
 
+// eslint-disable-next-line no-console
+console.log(`${currentMoment.clone().startOf('week').add(1, 'day').format('YYYY-MM-DD')} ~ ${currentMoment.clone().endOf('week').subtract(1, 'day').format('YYYY-MM-DD')}`);
 // eslint-disable-next-line no-console
 console.log(resultWithException);
