@@ -7,7 +7,7 @@ for _ in range(N):
 
 
 judge.sort()
-print(judge)
+# print(judge)
 # judge = judge.sort()
 
 # max_judge = judge[-1]
@@ -22,7 +22,7 @@ while start <= end:
   mid = (start + end) // 2
   for i in range(N):
     total += mid // judge[i]
-  print(total)
+  # print(total)
   if total >= M: 
     #최소값을 찾아야하므로 값이 같아도 계속해서
     #end의 값을 mid-1로 이동.
@@ -31,4 +31,5 @@ while start <= end:
   else:
     start = mid + 1
 
-print(answer)
+# print(answer)
+print(start)
