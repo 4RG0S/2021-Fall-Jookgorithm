@@ -22,4 +22,3 @@ while left <= right:
     right = mid - 1
 
 print(right) 
-  
