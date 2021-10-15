@@ -59,21 +59,11 @@ const result = members.map((member) => {
   };
 });
 
-// Apply Exception
-const resultWithException = result.map((iter) => {
-  // 커밋이 정상적으로 되지 않았던 이슈 (죽고리즘 첫째 주) + 월요일 공휴일 때문에 -2 추가
-  if (iter.name === '정민경') {
-    return {
-      name: iter.name,
-      missedCount: iter.missedCount - 2,
-    };
-  }
-  // 그 외에는 월요일이 공휴일이기 때문에 -1 추가
-  return {
-    name: iter.name,
-    missedCount: Math.max(0, iter.missedCount - 1),
-  };
-});
+// Apply Exception 월요일 공휴일
+const resultWithException = result.map((iter) => ({
+  name: iter.name,
+  missedCount: Math.max(0, iter.missedCount - 1),
+}));
 
 // eslint-disable-next-line no-console
 console.log(`${currentMoment.clone().startOf('week').add(1, 'day').format('YYYY-MM-DD')} ~ ${currentMoment.clone().endOf('week').subtract(1, 'day').format('YYYY-MM-DD')}`);
