@@ -59,11 +59,11 @@ const result = members.map((member) => {
   };
 });
 
-// Apply Exception 월요일 공휴일
-const resultWithException = result.map((iter) => ({
-  name: iter.name,
-  missedCount: Math.max(0, iter.missedCount - 1),
-}));
+const resultWithException = result;
+// result.map((iter) => ({
+//   name: iter.name,
+//   missedCount: Math.max(0, iter.missedCount - 1),
+// }));
 
 // eslint-disable-next-line no-console
 console.log(`${currentMoment.clone().startOf('week').add(1, 'day').format('YYYY-MM-DD')} ~ ${currentMoment.clone().endOf('week').subtract(1, 'day').format('YYYY-MM-DD')}`);
