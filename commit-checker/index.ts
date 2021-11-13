@@ -18,7 +18,7 @@ const options: GitlogOptions<CommitField> = {
   repo: __dirname,
   number: 1000,
   fields: ['authorEmail', 'authorDate'],
-  since: currentMoment.clone().startOf('week').add(1, 'day').format('YYYY-MM-DD'),
+  since: currentMoment.clone().startOf('week').format('YYYY-MM-DD'),
 };
 const commitLogs = gitlog(options);
 
@@ -49,6 +49,7 @@ const result = members.map((member) => {
   const { id, name } = member;
   let count = 0;
   commitArray.forEach((object) => {
+    console.log(object);
     if (object[id] === true) {
       count += 1;
     }
