@@ -6,7 +6,7 @@ public class commitMessage {
       String line = args[i];
       if (line.equals("file:") || line.equals("modified:")) {
         String fileName = args[i + 1];
-        System.out.println("[" + currentDate.getYear() % 100 + "." + currentDate.getMonthValue() + "." + currentDate.getDayOfMonth() + "]" + fileName);
+        System.out.println(fileName);
         break;
       }
     }
